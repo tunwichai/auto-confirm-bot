@@ -11,6 +11,7 @@ from my_selectors import (
     GRAB_SINGLE_SELECTOR,
     MODAL_CLOSE_SELECTOR,
 )
+from capsolver_helper import solve_turnstile_captcha
 
 def run(playwright: Playwright) -> None:
     # อ่านค่าจาก Google Sheet (cell A1)
@@ -101,9 +102,27 @@ def run(playwright: Playwright) -> None:
                         if grab_button.count() > 0:
                             grab_button.first.click()
                             print(f"คลิกปุ่ม grab-single ในแถวที่ {i+1} เรียบร้อยแล้ว")
-                            # รอ modal ปรากฏแล้วค้างไว้ 5 วินาทีก่อนปิด
+                            # รอ modal ปรากฏแล้วค้างไว้ 3 วินาทีก่อนปิด
                             page.wait_for_selector(MODAL_CLOSE_SELECTOR, timeout=3000)
-                            page.wait_for_timeout(3000)  # ค้าง modal ไว้ 5 วินาที
+                            page.wait_for_timeout(3000)  # ค้าง modal ไว้ 3 วินาที
+                            
+                            # หลัง modal ปรากฏ
+                            # sitekey = page.eval_on_selector('iframe[src*="challenges.cloudflare.com"]', 'el => new URL(el.src).searchParams.get("k")')
+                            # domain = page.url
+                            # api_key = "YOUR_CAPSOLVER_API_KEY"
+                            # token = solve_turnstile_captcha(api_key, sitekey, domain)
+                            # page.evaluate(f'document.querySelector(\'textarea[name="cf-turnstile-response"]\').value = "{token}"')
+                            
+                            try:
+                                confirm_button = page.locator(CONFIRM_BUTTON_XPATH)
+                                if confirm_button.count() > 0:
+                                    confirm_button.first.click()
+                                    print("คลิกปุ่ม confirm เรียบร้อยแล้ว")
+                                else:
+                                    print("ไม่พบปุ่ม confirm")
+                            except Exception as e:
+                                print(f"เกิดข้อผิดพลาดขณะคลิกปุ่ม confirm: {e}")
+
                             close_button = page.locator(MODAL_CLOSE_SELECTOR)
                             if close_button.count() > 0:
                                 close_button.first.click()
