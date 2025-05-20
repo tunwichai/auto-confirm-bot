@@ -32,8 +32,8 @@ def run(playwright: Playwright) -> None:
     page = context.new_page()
 
     # ไปยัง URL ของเว็บแอปพลิเคชัน
-    page.goto("https://kkmediatech.github.io/logistics-app/")
-    print("เปิดหน้าเว็บ https://kkmediatech.github.io/logistics-app/ เรียบร้อยแล้ว")
+    page.goto("https://tunwichai.github.io/auto-confirm-bot-tester/")
+    print("เปิดหน้าเว็บ https://tunwichai.github.io/auto-confirm-bot-tester/ เรียบร้อยแล้ว")
 
     # รอให้หน้าเว็บโหลดสมบูรณ์ (เผื่อกรีมี element ที่โหลดช้า)
     page.wait_for_load_state("networkidle")
